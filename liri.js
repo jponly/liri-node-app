@@ -1,10 +1,17 @@
+var request = require("request");
 require("dotenv").config();
 
-// All the code required to import the keys
-var spotify = new Spotify(keys.spotify);
-var client = new Twitter(keys.twitter);
 
-var coomand = process.argv[2];
+
+
+
+
+// All the code required to import the keys
+// var spotify = new Spotify(keys.spotify);
+// var client = new Twitter(keys.twitter);
+
+var command = process.argv[2];
+var name = process.argv[3];
 
 // Make it so liri.js can take in one of the following commands:
 // (if/else statements or switch)
@@ -18,9 +25,15 @@ var coomand = process.argv[2];
 
 // ????????????
 
+
+
+
+
+
 if(command == 'movie-this')  {
-    moviethis();
-    // no brackets only if "if" is doing one function
+    console.log(command);
+    moviethis(name);
+   
 }
 
 
@@ -29,6 +42,12 @@ if(command == 'movie-this')  {
 function mytweets() {
 // This will show you last 20 tweets and when they are created at in your
 }
+
+
+
+
+
+
 
 function spotifythissong(song_name) {
 //     * This will show the following information about the song in your terminal/bash window
@@ -46,7 +65,25 @@ function spotifythissong(song_name) {
 }
 
 
+
+
+
+
 function moviethis(movie_name) {
+     // no brackets only if "if" is doing one function
+    // Then run a request to the OMDB API with the movie specified
+request("http://www.omdbapi.com/?t=" + movie_name + "&y=&plot=short&apikey=trilogy", function(error, response) {
+
+    // If the request is successful (i.e. if the response status code is 200)
+    if (!error && response.statusCode === 200) {
+  
+      // Parse the body of the site and recover just the imdbRating
+      // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
+      console.log("The movie's rating is: " + JSON.parse(response.body).imdbRating);
+    }
+  }); //end of request
+
+
 // You'll use the request package to retrieve data from the OMDB API. Like all of the in-class activities, the OMDB API requires an API key. You may use `trilogy`.
 //     This will output the following information to your terminal/bash window:
 
@@ -64,7 +101,10 @@ function moviethis(movie_name) {
 //    * If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.'
      
 
-}
+} //end of function movie
+
+
+
 
 function dowhatitsays () {
     // * Using the `fs` Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
