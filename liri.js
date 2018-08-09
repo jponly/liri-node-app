@@ -1,87 +1,173 @@
-var request = require("request");
 require("dotenv").config();
 
-
-
-
-
-
-// All the code required to import the keys
-// var spotify = new Spotify(keys.spotify);
-// var client = new Twitter(keys.twitter);
-
+// variables
+var keys = require("./keys.js");
+var fs = require("fs");
+var Spotify = require('node-spotify-api');
+var twitter = require('twitter');
+var request = require("request");
 var command = process.argv[2];
 var name = process.argv[3];
 
-// Make it so liri.js can take in one of the following commands:
-// (if/else statements or switch)
-// * `my-tweets`
 
-// * `spotify-this-song`
+// All the code required to import the keys
+ var spotify = new Spotify(keys.spotify);
+ var client = new Twitter(keys.twitter);
 
-// * `movie-this`
+// switch statements
+switch (command) {
+    case "my-tweets":
+    mytweets();
+    break;
 
-// * `do-what-it-says` 
+    case "spotify-this-song":
+    spotifythissong();
+    break;
 
-// ????????????
+    case "movie-this":
+    moviethis();
+    break;
 
+    case "do-what-it-says":
+    dowhatitsays();
+    break;
 
+    console.log("\n" + "type any command after 'node liri.js': " + "\n" +
+    "my-tweets" + "\n" + "spotify-this-song 'song title' " + "\n" + "do-what-it-says" + "\n" + "Use quotes for multiword titles!");
 
-
-
-
-if(command == 'movie-this')  {
-    console.log(command);
-    moviethis(name);
-   
-}
-
+};
 
 
 
 function mytweets() {
-// This will show you last 20 tweets and when they are created at in your
-}
+    var params = { screen_name: 'JP48957016'}
+    client.get('statuses/user_timeline', params, function (error, tweets, response) {
+if (!error) {
+    for (var i = 0; i < tweets.length; i++) {
+        console.log(tweets[i].text);
+    };
+} else {
+    console.log("error: " + err);
+    return;
+    };
 
+  });
 
-
-
-
-
+};
 
 function spotifythissong(song_name) {
-//     * This will show the following information about the song in your terminal/bash window
-     
-//      * Artist(s)
-     
-//      * The song's name
-     
-//      * A preview link of the song from Spotify
-     
-//      * The album that the song is from
+    var song_name = process.argv[3];
+    if(!song_name) {
+        song_name = "Hit me baby one more time";
+    };
+    songRequest = song_name;
+    spotify.search({
+        type:"track",
+        query: songRequest
+    },
+function (err, data) {
+    if(!err) {
+        var trackInfo = data.tracks.items;
+        for (var i = 0; i < 5; i++) {
+            if (trackInfo[i] != undefined) {
+                var spotifyResults = 
+                "Artist: " + trackInfo[i].artists[0].name + "\n" +
+                "Song: " + trackInfo[i].name + "\n" +
+                "Preview URL: " + trackInfo[i].preview_url + "\n" +
+                "Album: " + trackInfo[i].album.name + "\n"
 
-//    * If no song is provided then your program will default to "The Sign" by Ace of Base.
+                console.log(spotifyResults);
+                console.log('');
+            };
+        };
+    } else {
+        console.log("error: " + err);
+        return;
+       };
+   });
 
-}
-
-
-
-
-
+ };
 
 function moviethis(movie_name) {
+
      // no brackets only if "if" is doing one function
     // Then run a request to the OMDB API with the movie specified
-request("http://www.omdbapi.com/?t=" + movie_name + "&y=&plot=short&apikey=trilogy", function(error, response) {
+
+var queryUrl = "http://www.omdbapi.com/?t=" + movie_name + "&y=&plot=short&apikey=trilogy";
+request(queryUrl, function(error, response, body) {
 
     // If the request is successful (i.e. if the response status code is 200)
     if (!error && response.statusCode === 200) {
   
+        var movieData = JSON.parse(body);
+        var queryUrlResults = 
+        "Title: " + movieData.Title + "\n" +
+        "Year: " + movieData.Year + "\n" +
+        "IMDB Rating: " + movieData.Ratings[0].Value + "\n" +
+        "Rotten Tomatoes Rating: " + movieData.Ratings[1].Value + "\n" +
+        "Country: " + movieData.Country + "\n" +
+        "Language: " + movieData.Language + "\n" +
+        "Plot: " + movieData.Plot + "\n" +
+        "Actors: " + movieData.Actors + "\n" 
+
+        console.log(queryUrlResults);
+    } else {
+        console.log("error: " + err);
+        return;
+    };
       // Parse the body of the site and recover just the imdbRating
       // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
-      console.log("The movie's rating is: " + JSON.parse(response.body).imdbRating);
-    }
-  }); //end of request
+      
+    });
+};
+
+function dowhatitsays() { 
+    fs.writeFile("randon.txt", 'spotify-this-song,"The Sign"', function (err) {
+        var song = "spotify-this-song 'The Sign'"
+        if(err) {
+            return console.log(err);
+        };
+
+        console.log(song);
+    });
+    
+  };
+// ^end of request_1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//   }); //end of request(possibly)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ---------
+// do-what-it-says
 
 
 // You'll use the request package to retrieve data from the OMDB API. Like all of the in-class activities, the OMDB API requires an API key. You may use `trilogy`.
@@ -101,17 +187,49 @@ request("http://www.omdbapi.com/?t=" + movie_name + "&y=&plot=short&apikey=trilo
 //    * If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.'
      
 
-} //end of function movie
+ //end of function movie
 
 
 
 
-function dowhatitsays () {
-    // * Using the `fs` Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
+
+// Make it so liri.js can take in one of the following commands:
+// (if/else statements or switch)
+// * `my-tweets`
+
+// * `spotify-this-song`
+
+// * `movie-this`
+
+// * `do-what-it-says` 
+
+// ????????????
+
+
+// --------
+
+// if(command == 'movie-this')  {
+//     console.log(command);
+//     moviethis(name);
+   
+// }
+
+// ---------------
+
+// SPOTIFY
+//     * This will show the following information about the song in your terminal/bash window
      
-    // * It should run `spotify-this-song` for "I Want it That Way," as follows the text in `random.txt`.
-    
-    // * Feel free to change the text in that document to test out the feature for other commands.
+//      * Artist(s)
+     
+//      * The song's name
+     
+//      * A preview link of the song from Spotify
+     
+//      * The album that the song is from
+
+//    * If no song is provided then your program will default to "The Sign" by Ace of Base.
 
 
-}
+// -----------
+
+// console.log("The movie's rating is: " + JSON.parse(response.body).imdbRating);
