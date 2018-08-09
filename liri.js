@@ -7,39 +7,38 @@ var Spotify = require('node-spotify-api');
 var twitter = require('twitter');
 var request = require("request");
 var command = process.argv[2];
-var name = process.argv[3];
+var movie_name = process.argv[3];
 
 
 // All the code required to import the keys
  var spotify = new Spotify(keys.spotify);
- var client = new Twitter(keys.twitter);
+ var client = new twitter(keys.twitter);
 
 // switch statements
 switch (command) {
     case "my-tweets":
-    mytweets();
+    myTweets();
     break;
 
     case "spotify-this-song":
-    spotifythissong();
+    spotifyThisSong();
     break;
 
     case "movie-this":
-    moviethis();
+    movieThis();
     break;
 
     case "do-what-it-says":
-    dowhatitsays();
+    doWhatItSays();
     break;
 
-    console.log("\n" + "type any command after 'node liri.js': " + "\n" +
+    default: console.log("\n" + "type any command after 'node liri.js': " + "\n" +
     "my-tweets" + "\n" + "spotify-this-song 'song title' " + "\n" + "do-what-it-says" + "\n" + "Use quotes for multiword titles!");
 
 };
 
 
-
-function mytweets() {
+function myTweets() {
     var params = { screen_name: 'JP48957016'}
     client.get('statuses/user_timeline', params, function (error, tweets, response) {
 if (!error) {
@@ -55,10 +54,10 @@ if (!error) {
 
 };
 
-function spotifythissong(song_name) {
+function spotifyThisSong(song_name) {
     var song_name = process.argv[3];
     if(!song_name) {
-        song_name = "Hit me baby one more time";
+        song_name = "The Sign";
     };
     songRequest = song_name;
     spotify.search({
@@ -88,10 +87,7 @@ function (err, data) {
 
  };
 
-function moviethis(movie_name) {
-
-     // no brackets only if "if" is doing one function
-    // Then run a request to the OMDB API with the movie specified
+function movieThis() {
 
 var queryUrl = "http://www.omdbapi.com/?t=" + movie_name + "&y=&plot=short&apikey=trilogy";
 request(queryUrl, function(error, response, body) {
@@ -115,13 +111,12 @@ request(queryUrl, function(error, response, body) {
         console.log("error: " + err);
         return;
     };
-      // Parse the body of the site and recover just the imdbRating
-      // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
+     
       
     });
 };
 
-function dowhatitsays() { 
+function doWhatItSays() { 
     fs.writeFile("randon.txt", 'spotify-this-song,"The Sign"', function (err) {
         var song = "spotify-this-song 'The Sign'"
         if(err) {
@@ -131,8 +126,10 @@ function dowhatitsays() {
         console.log(song);
     });
     
+
+    
   };
-// ^end of request_1
+// ^end of request
 
 
 
@@ -153,6 +150,8 @@ function dowhatitsays() {
 
 //   }); //end of request(possibly)
 
+  // no brackets only if "if" is doing one function
+    // Then run a request to the OMDB API with the movie specified
 
 
 
@@ -162,8 +161,8 @@ function dowhatitsays() {
 
 
 
-
-
+ // Parse the body of the site and recover just the imdbRating
+      // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
 
 
 // ---------
