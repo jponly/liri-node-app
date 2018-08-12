@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-// variables
+// variables used to gather data from
 var keys = require("./keys.js");
 var fs = require("fs");
 var Spotify = require('node-spotify-api');
@@ -32,13 +32,10 @@ switch (command) {
     doWhatItSays();
     break;
 
-    console.log("\n" + "type any command after 'node liri.js': " + "\n" +
-    "my-tweets" + "\n" + "spotify-this-song 'song title' " + "\n" + "do-what-it-says" + "\n" + "Use quotes for multiword titles!");
     
 };
 
-
- function myTweets() {
+function myTweets() {
         var params = { screen_name: 'JP48957016'}
         client.get('statuses/user_timeline', params, function (error, tweets, response) {
     if (!error) {
@@ -122,8 +119,8 @@ switch (command) {
 
 
  function doWhatItSays() { 
-        fs.writeFile("randon.txt", 'spotify-this-song,"The Sign"', function (err) {
-            var song = "spotify-this-song 'The Sign'"
+        fs.writeFile("random.txt", "spotify-this-song, 'I want it That Way'", function (err) {
+            var song = "spotify-this-song, 'I want it That Way'"
             if(err) {
             return console.log(err);
             };
@@ -131,10 +128,6 @@ switch (command) {
             console.log(song);
     });
     
-
-
-
-
 };
 // end of request
 
@@ -156,71 +149,3 @@ switch (command) {
 
 
 
-
-
-
-//   }); //end of request(possibly)
-
-  // no brackets only if "if" is doing one function
-    // Then run a request to the OMDB API with the movie specified
-
-// Parse the body of the site and recover just the imdbRating
-      // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
-// ---------
-// do-what-it-says
-
-// You'll use the request package to retrieve data from the OMDB API. Like all of the in-class activities, the OMDB API requires an API key. You may use `trilogy`.
-//     This will output the following information to your terminal/bash window:
-
-//      ```
-//        * Title of the movie.
-//        * Year the movie came out.
-//        * IMDB Rating of the movie.
-//        * Rotten Tomatoes Rating of the movie.
-//        * Country where the movie was produced.
-//        * Language of the movie.
-//        * Plot of the movie.
-//        * Actors in the movie.
-//      ```
-
-//    * If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.'
-     
-//end of function movie
-
-// Make it so liri.js can take in one of the following commands:
-// (if/else statements or switch)
-// * `my-tweets`
-
-// * `spotify-this-song`
-
-// * `movie-this`
-
-// * `do-what-it-says` 
-
-// ????????????
-// --------
-// if(command == 'movie-this')  {
-//     console.log(command);
-//     moviethis(name);
-   
-// }
-
-// ---------------
-
-// SPOTIFY
-//     * This will show the following information about the song in your terminal/bash window
-     
-//      * Artist(s)
-     
-//      * The song's name
-     
-//      * A preview link of the song from Spotify
-     
-//      * The album that the song is from
-
-//    * If no song is provided then your program will default to "The Sign" by Ace of Base.
-
-
-// -----------
-
-// console.log("The movie's rating is: " + JSON.parse(response.body).imdbRating);
