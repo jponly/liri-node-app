@@ -56,7 +56,7 @@ function myTweets() {
  function spotifyThisSong(song_name) {
         var song_name = process.argv[3];
         if(!song_name) {
-            song_name = "The Sign";
+            song_name = "Ace of Base: 'The Sign'";
         };
         songRequest = song_name;
         spotify.search({
